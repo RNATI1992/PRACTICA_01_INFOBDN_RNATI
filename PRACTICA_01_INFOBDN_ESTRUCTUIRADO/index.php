@@ -46,7 +46,7 @@ else{
                 desactivar_cursos();
                 break;
             case 'activar_cursos':
-                // activar_cursos();
+                activar_cursos();
                 break;
             /**
              * admini. professors

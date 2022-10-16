@@ -143,7 +143,16 @@
     }
 
     function desa_curs($curs_seleccionat){
-        $query = "UPDATE cursos SET actiu='1' WHERE idCurso= $curs_seleccionat";
+        $query = "UPDATE cursos SET actiu='0' WHERE idCurso= $curs_seleccionat";
+
+        $conectar_query = mysqli_query(conectar(), $query);
+
+        return $conectar_query;
+    }
+
+    function activar_curs($curso_seleccionat)
+    {
+        $query = "UPDATE cursos SET actiu = '1' WHERE idCurso = '$curso_seleccionat'";
 
         $conectar_query = mysqli_query(conectar(), $query);
 
@@ -252,15 +261,27 @@
 
     function cursos_disponibles($data_avui, $usuari){
 
-        $query = "SELECT * FROM cursos AS c WHERE c.data_inici >= '$data_avui' AND c.idCurso NOT IN (SELECT m.idCurso FROM matricula AS m WHERE m.dni_alum = '$usuari')";
+        $query = "SELECT * FROM cursos AS c WHERE c.data_inici >= '$data_avui' AND c.actiu = 1 AND c.idCurso NOT IN (SELECT m.idCurso FROM matricula AS m WHERE m.dni_alum = '$usuari' AND m.actiu = 1)";
+
+        // var_dump($query);
+        $conectar_query = mysqli_query(conectar(), $query);
+
+        return $conectar_query;
+    }
+
+    function existe_matricula($usuari){
+        $query = "SELECT * FROM matricula WHERE dni_alum = '$usuari'";
 
         $conectar_query = mysqli_query(conectar(), $query);
 
-        // print_r($data_avui);
-        // print_r($usuari);
-        // foreach ($conectar_query as $key) {
-        //     print_r($key['nom_curs']);
-        // }
+        return $conectar_query;
+    }
+
+    function actualitzar_matricula($curs_seleccionat)
+    {
+        $query = "UPDATE matricula SET actiu = 1 WHERE idCurso = '$curs_seleccionat'";
+
+        $conectar_query = mysqli_query(conectar(), $query);
 
         return $conectar_query;
     }
@@ -286,7 +307,7 @@
 
 
     function desactivar_matricula($curs_seleccionat){
-        $query = "UPDATE matricula SET actiu='1' WHERE idCurso = '$curs_seleccionat'";
+        $query = "UPDATE matricula SET actiu=0, nota='' WHERE idCurso = '$curs_seleccionat'";
 
         $conectar_query = mysqli_query(conectar(), $query);
 
@@ -294,8 +315,8 @@
     }
 
     function taula_notes($usuari){
-        $query = "SELECT * FROM cursos AS c INNER JOIN matricula AS m ON  c.idCurso = m.idCurso WHERE m.dni_alum = '$usuari'";
-
+        $query = "SELECT * FROM cursos AS c INNER JOIN matricula AS m ON  c.idCurso = m.idCurso WHERE m.dni_alum = '$usuari' AND  m.actiu = 1 AND c.actiu = 1";
+        // var_dump($query);
         $conectar_query = mysqli_query(conectar(), $query);
 
         return $conectar_query;
@@ -306,7 +327,7 @@
      */
 
     function cursos_imparteixes($professor){
-        $query = "SELECT * FROM cursos WHERE dni_prof = '$professor'";
+        $query = "SELECT * FROM cursos WHERE dni_prof = '$professor' AND actiu = 1";
 
         $conectar_query = mysqli_query(conectar(), $query);
 
@@ -330,7 +351,7 @@
     }
 
     function cursos_finalitzats_sql($professor, $data_avui){
-        $query = "SELECT * FROM cursos AS c INNER JOIN matricula AS m ON  c.idCurso = m.idCurso WHERE c.dni_prof = '$professor' AND c.data_final < '$data_avui' GROUP BY m.idCurso";
+        $query = "SELECT * FROM cursos AS c INNER JOIN matricula AS m ON  c.idCurso = m.idCurso WHERE c.dni_prof = '$professor' AND c.data_final < '$data_avui' AND c.actiu = 1 GROUP BY m.idCurso";
 
         $conectar_query = mysqli_query(conectar(), $query);
 

@@ -23,7 +23,7 @@
 		<!-- Row 1 - fadeIn -->
 		<?php
 		foreach ($resultado as $key) {
-			if ($key != "") { ?>
+			if ($key['actiu'] == 1) { ?>
 				<section class="row-fadeIn-wrapper">
 					<article class="row2 nfl">
 						<ul>
@@ -53,9 +53,9 @@
 	</section>
 </div>
 <?php
-if ($succesful =! '') {
-	echo $succesful;
-}
+// if ($succesful = !'') {
+// 	echo $succesful;
+// }
 ?>
 <div class="contenidor">
 	<a href="index.php?entrada=pagina_principal_alumnes"><i class="fas fa-reply"><span> Pagina principal </span></i></a>

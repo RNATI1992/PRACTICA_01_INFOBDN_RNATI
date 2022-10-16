@@ -27,7 +27,7 @@
 		</main>
 		<!-- Row 1 - fadeIn -->
 		<?php foreach ($resultado as $key) {
-			if ($key['actiu'] == FALSE) { ?>
+			if ($key['actiu'] == 1) { ?>
 				<section class="row3-fadeIn-wrapper">
 					<article class="row3 nfl">
 						<ul>

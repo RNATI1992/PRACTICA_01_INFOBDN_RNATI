@@ -346,6 +346,12 @@
         include __DIR__ . '/../vista/administracio/cursos/vista_administracio_gestio_cursos.php';
     }
 
+    function activar_cursos(){
+        $curs_activat = activar_curs($_GET['fila']);
+        print_r(activat_succes());
+        header("Refresh:1; url=index.php?entrada=pagina_principal_cursos");
+    }
+
     /**
      * Gestió de Professors
      */
@@ -483,9 +489,25 @@
        
             if(isset($_GET['fila'])){
                 $curs = $_GET['fila'];
-                $rr = afegir_matricula($curs, $usuari);
-                $succesful = satisfactoriament();
-                $resultado = cursos_disponibles($avui, $usuari);
+                $result = existe_matricula($usuari);
+                
+                if ($result) {
+                    $testAurena = mysqli_fetch_array($result);
+                    // print("<pre>");
+                    // var_dump($testAurena);
+                    // print("</pre>");
+                    if ($testAurena == NULL) {
+                        $afeg_mattricula = afegir_matricula($curs, $usuari);
+                        $succesful = satisfactoriament();
+                        $resultado = cursos_disponibles($avui, $usuari);
+                        registre_succes();
+                        header("Refresh:1; url=index.php?entrada=cursos_disponibles_alumnes");
+                    } else {
+                        $act_matricula = actualitzar_matricula($curs);
+                        activat_succes();
+                        header("Refresh:1; url=index.php?entrada=cursos_disponibles_alumnes");
+                    }
+                }
                 header("Refresh:1; url=index.php?entrada=cursos_disponibles_alumnes");
             }
             else{
@@ -663,5 +685,3 @@
             header("Refresh:0; url=index.php?entrada=checklogin");
         }
     }
-
-?>
