@@ -26,7 +26,7 @@
 			<label for="prof">Professor</label>
 		</div>
 		<div>
-			<input type="radio" id="alum" name="radiologin" value="alumne">
+			<input type="radio" id="alum" name="radiologin" value="alumne" checked>
 			<label for="alum">Alumne</label>
 		</div>
 		<div class="botons">

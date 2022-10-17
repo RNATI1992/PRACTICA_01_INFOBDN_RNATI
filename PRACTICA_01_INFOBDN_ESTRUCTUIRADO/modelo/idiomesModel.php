@@ -34,6 +34,32 @@
         return $result;
     }
 
+    function auth_actiu_alumne($usuari){
+        $query = "SELECT * FROM alumnes WHERE actiu = '1' and dni_alumne = '$usuari'";
+
+        $result = mysqli_query(conectar(), $query);
+
+        $actiu = '';
+        foreach ($result as $key) {
+            $actiu = $key['actiu'];
+        }
+
+        return $actiu;
+    }
+
+    function auth_actiu_professors($usuari){
+        $query = "SELECT * FROM professors WHERE actiu = '1' and dni_prof = '$usuari'";
+
+        $result = mysqli_query(conectar(), $query);
+
+        $actiu = '';
+        foreach ($result as $key) {
+            $actiu = $key['actiu'];
+        }
+
+        return $actiu;
+    }
+
     /**
      * Registre 
      */

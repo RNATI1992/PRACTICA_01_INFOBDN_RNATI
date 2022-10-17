@@ -42,29 +42,45 @@
             $incorrecte = "<div class='contenidor_2' style='background-color: #c94f60; color: #ffffff';>Has posat les credencials incorrectament! </div>";
             if(isset($_POST['radiologin'])){
                 if ($_POST['radiologin'] == "alumne"){
-                    $result = auth_login_alumne($usuari, $password);
-                    if ($result) {
-                        if (mysqli_fetch_array($result) != NULL) {
-                            $_SESSION['dni'] = $usuari;
-                            $_SESSION['pass'] = $password;
-                            include __DIR__ . '/../vista/alumnes/vista_alumnes_principal.php'; 
+                    $actiu = auth_actiu_alumne($usuari);
+                    if($actiu == '1'){
+                        $result = auth_login_alumne($usuari, $password);
+                        if ($result) {
+                            if (mysqli_fetch_array($result) != NULL) {
+                                $_SESSION['dni'] = $usuari;
+                                $_SESSION['pass'] = $password;
+                                include __DIR__ . '/../vista/alumnes/vista_alumnes_principal.php'; 
+                            } 
+                            else {
+                                echo $incorrecte;
+                                header("Refresh:1; url=index.php?entrada=checklogin");
+                            }
                         } 
                         else {
                             echo $incorrecte;
                             header("Refresh:1; url=index.php?entrada=checklogin");
                         }
-                    } else {
-                        echo $incorrecte;
-                        header("Refresh:1; url=index.php?entrada=checklogin");
+                    }
+                    else{
+                        usuari_desactivat();
+                        // header("Refresh:1; url=index.php?entrada=checklogin");
                     }
                 }
                 else if($_POST['radiologin'] == "professor"){
-                    $result = auth_login_professor($usuari, $password);
-                    if ($result) {
-                        if (mysqli_fetch_array($result) != NULL) {
-                            $_SESSION['dni_professor'] = $usuari;
-                            $_SESSION['pass'] = $password;
-                            include __DIR__ . '/../vista/professors/vista_professors_principal.php'; 
+                    $actiu = auth_actiu_professors($usuari);
+                    // print_r($actiu[1]);
+                    if ($actiu == '1') {
+                        $result = auth_login_professor($usuari, $password);
+                        if ($result) {
+                            if (mysqli_fetch_array($result) != NULL) {
+                                $_SESSION['dni_professor'] = $usuari;
+                                $_SESSION['pass'] = $password;
+                                include __DIR__ . '/../vista/professors/vista_professors_principal.php'; 
+                            }
+                            else{
+                                echo $incorrecte;
+                                header("Refresh:1; url=index.php?entrada=checklogin");
+                            }
                         }
                         else{
                             echo $incorrecte;
@@ -72,8 +88,8 @@
                         }
                     }
                     else{
-                        echo $incorrecte;
-                        header("Refresh:1; url=index.php?entrada=checklogin");
+                        usuari_desactivat();
+                        // header("Refresh:1; url=index.php?entrada=checklogin");
                     }
                 } 
                 else {
@@ -170,6 +186,10 @@
     function activat_succes()
     {
         return print_r("<div class='contenidor_2' style='background-color: #63FFA6; color: black';>Has activat correctament! </div>");
+    }
+
+    function usuari_desactivat(){
+        return print_r("<div class='contenidor_2' style='background-color: #c94f60; color: black';>Aquest usuari esta deactivat! </div>");
     }
 
     function data_avui(){
@@ -343,7 +363,8 @@
 
     function desactivar_cursos(){
         $curs_desactivat = desa_curs($_GET['fila']);
-        include __DIR__ . '/../vista/administracio/cursos/vista_administracio_gestio_cursos.php';
+        desactivat_succes();
+        header("Refresh:1; url=index.php?entrada=pagina_principal_cursos");
     }
 
     function activar_cursos(){

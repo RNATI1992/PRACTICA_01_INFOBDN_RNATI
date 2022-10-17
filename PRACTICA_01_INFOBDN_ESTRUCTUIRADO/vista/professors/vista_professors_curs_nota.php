@@ -45,7 +45,11 @@
 								<h3>Edat</h3>
 							</span>
 							<span class="u_s">
-								<?php echo $key['edat'] ?>
+								<?php
+									$resultat = explode("-", $key['edat']);
+									$anys = date('Y') - $resultat[0];
+									echo $anys;
+								?>
 							</span>
 							<?php if ($key['nota'] == '') { ?>
 								<span class="u_line_2_not_allowed">
