@@ -34,8 +34,8 @@
 							<li><?php echo $key['nom_curs'] ?></li>
 							<li><?php echo $key['descripcio'] ?></li>
 							<li><?php echo $key['horas'] ?></li>
-							<li><?php echo $key['data_inici'] ?></li>
-							<li class="li_data_final"><?php echo $key['data_final'] ?></li>
+							<li><?php echo date("d-m-Y", strtotime($key['data_inici'])) ?></li>
+							<li class="li_data_final"><?php echo date("d-m-Y", strtotime($key['data_final'])) ?></li>
 							<li><?php echo $key['dni_prof'] ?></li>
 							<li><a href="index.php?entrada=editar_cursos&fila=<?php echo $key['idCurso'] ?>"><i class="fas fa-edit"></i></a></li>
 							<li><a href="index.php?entrada=desactivar_cursos&fila=<?php echo $key['idCurso'] ?>"><i class="fas fa-trash-alt"></i></a></li>

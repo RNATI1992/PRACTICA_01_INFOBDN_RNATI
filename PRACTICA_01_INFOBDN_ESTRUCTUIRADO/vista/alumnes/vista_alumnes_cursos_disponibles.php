@@ -30,8 +30,8 @@
 							<li><?php echo $key['nom_curs'] ?></li>
 							<li><?php echo $key['descripcio'] ?></li>
 							<li><?php echo $key['horas'] ?></li>
-							<li><?php echo $key['data_inici'] ?></li>
-							<li><?php echo $key['data_final'] ?></li>
+							<li><?php echo date("d-m-Y", strtotime($key['data_inici'])) ?></li>
+							<li><?php echo date("d-m-Y", strtotime($key['data_final'])) ?></li>
 							<li><a href="index.php?entrada=cursos_disponibles_alumnes&fila=<?php echo $key['idCurso'] ?>"><i class="fas fa-user-plus"></i></a></li>
 						</ul>
 					</article>

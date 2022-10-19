@@ -29,8 +29,8 @@
                             <li><?php echo $key['nom_curs'] ?></li>
                             <li><?php echo $key['descripcio'] ?></li>
                             <li><?php echo $key['horas'] ?></li>
-                            <li><?php echo $key['data_inici'] ?></li>
-                            <li><?php echo $key['data_final'] ?></li>
+                            <li><?php echo date("d-m-Y", strtotime($key['data_inici'])) ?></li>
+                            <li><?php echo date("d-m-Y", strtotime($key['data_final'])) ?></li>
                             <?php
                             $result = '';
                             if ($key['nota'] > '0' && $key['nota'] < '5') {

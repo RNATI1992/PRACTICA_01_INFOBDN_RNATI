@@ -18,7 +18,7 @@
      */
     function auth_login_alumne($usuari, $password){
         //utilizaremos this por que esta en la misma clase
-        $query = "SELECT * FROM alumnes WHERE dni_alumne = '$usuari' AND pass = '$password'";
+        $query = "SELECT * FROM alumnes WHERE dni_alumne = '$usuari' AND pass ='" . md5($password) . "'";
 
         $result = mysqli_query(conectar(), $query);
        
@@ -27,7 +27,7 @@
 
     function auth_login_professor($usuari, $password){
         //utilizaremos this por que esta en la misma clase
-        $query = "SELECT * FROM professors WHERE dni_prof = '$usuari' AND pass = '$password'";
+        $query = "SELECT * FROM professors WHERE dni_prof = '$usuari' AND pass = '" . md5($password) . "'";
 
         $result = mysqli_query(conectar(), $query);
 
@@ -73,7 +73,7 @@
     }
 
     function registrar($foto){
-        $query = "INSERT INTO alumnes (dni_alumne, nom, cognom, pass, edat, fotografia, sexe) VALUES ('$_POST[dni_alum_form]', '$_POST[nom_alum_form]', '$_POST[cognom_alum_form]', '$_POST[pass_alum_form]', '$_POST[edat_alum_form]', '$foto', '$_POST[radiologin]')";
+        $query = "INSERT INTO alumnes (dni_alumne, nom, cognom, pass, edat, fotografia, sexe) VALUES ('$_POST[dni_alum_form]', '$_POST[nom_alum_form]', '$_POST[cognom_alum_form]', '" . md5($_POST['pass_alum_form']) . "', '$_POST[edat_alum_form]', '$foto', '$_POST[radiologin]')";
 
         $result = mysqli_query(conectar(), $query);
 
@@ -108,6 +108,14 @@
 
     function professors_disponibles(){
         $query = "SELECT * FROM professors";
+
+        $conectar_query = mysqli_query(conectar(), $query);
+
+        return $conectar_query;
+    }
+
+    function professors_disponibles_actius(){
+        $query = "SELECT * FROM professors WHERE actiu = '1'";
 
         $conectar_query = mysqli_query(conectar(), $query);
 
@@ -226,7 +234,7 @@
 
     function afegir_professors_administracio($foto){
         $query = "INSERT INTO professors (dni_prof, nom_professor, cognom_professor, pass, titol_academic, fotografia, actiu) 
-            VALUES ('$_POST[dni_professors_afegir]', '$_POST[nom_professors_afegir]', '$_POST[cognom_professors_afegir]', '$_POST[password_professors_afegir]', '$_POST[titol_professors_afegir]', '$foto', TRUE)";
+            VALUES ('$_POST[dni_professors_afegir]', '$_POST[nom_professors_afegir]', '$_POST[cognom_professors_afegir]', '" . md5($_POST['password_professors_afegir']) . "', '$_POST[titol_professors_afegir]', '$foto', TRUE)";
 
         $conectar_query = mysqli_query(conectar(), $query);
 

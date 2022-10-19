@@ -1,0 +1,26 @@
+#############
+### ADMIN ###
+#############
+
+usuari:      prueba@prueba.com
+pass:		 prueba
+
+#############
+### Prof  ###
+#############
+
+usuari:      47334063V
+pass:		 1234
+
+#############
+### Alum  ###
+#############
+
+usuari:      47334063V
+pass:		 1234
+
+
+HI HA D'ALTRES USUARIS ALUMENS NO TENEN EL CODI ENCRIPTAT EN PHPMYADMIN PER SI VOLEU POSAR UN ALTRE.
+
+
+

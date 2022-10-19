@@ -120,7 +120,7 @@
 									Data Inici:
 								</span>
 								<span class="u_s">
-									<?php echo $key['data_inici'] ?>
+									<?php echo date("d-m-Y", strtotime($key['data_inici'])) ?>
 								</span>
 							</p>
 							<p class="u_text_p">
@@ -128,7 +128,7 @@
 									Data Final:
 								</span>
 								<span class="u_s">
-									<?php echo $key['data_final'] ?>
+									<?php echo date("d-m-Y", strtotime($key['data_final'])) ?>
 								</span>
 							</p>
 						</div>

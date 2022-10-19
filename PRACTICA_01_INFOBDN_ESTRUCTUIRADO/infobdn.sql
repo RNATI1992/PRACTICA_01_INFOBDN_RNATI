@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-10-2022 a las 19:34:06
+-- Tiempo de generación: 19-10-2022 a las 13:16:37
 -- Versión del servidor: 10.4.17-MariaDB
 -- Versión de PHP: 7.3.26
 
@@ -50,7 +50,7 @@ CREATE TABLE `alumnes` (
   `nom` varchar(250) COLLATE utf8_bin NOT NULL,
   `cognom` varchar(250) COLLATE utf8_bin NOT NULL,
   `pass` varchar(100) COLLATE utf8_bin NOT NULL,
-  `edat` varchar(250) COLLATE utf8_bin NOT NULL,
+  `edat` date NOT NULL,
   `titol_academic` varchar(250) COLLATE utf8_bin NOT NULL,
   `fotografia` varchar(250) COLLATE utf8_bin NOT NULL,
   `cursos_matriculats` varchar(250) COLLATE utf8_bin NOT NULL,
@@ -62,12 +62,14 @@ CREATE TABLE `alumnes` (
 --
 
 INSERT INTO `alumnes` (`dni_alumne`, `nom`, `cognom`, `pass`, `edat`, `titol_academic`, `fotografia`, `cursos_matriculats`, `sexe`) VALUES
-('1', 'Bryan', 'Pastrana', '1', '21', '', '', '', 'h'),
-('2', 'Salma', 'Alami', '1', '18', '', '', '', 'd'),
-('3', 'Guillem', 'Anglada', '1', '18', '', '', '', 'h'),
-('4', 'Rodolfo', 'Kanovellas', '1234', '22', '', 'img/1665925515-logo_hotel.png', '', ''),
-('6', 'hulio', 'anguita', '1234', '24', '', 'img/1665938604-logo_hotel.png', '', 'h'),
-('9', 'dos', 'tres', '1', '22', '', 'img/1665593520-Redouan.jpg', '', '');
+('1', 'Bryan', 'Pastrana', '1', '2001-08-08', '', '', '', 'h'),
+('123456789', 'r', 'a@example.com', 'prueba', '2001-08-08', '', 'img/1665962101-Redouan.jpg', '', 'h'),
+('2', 'Salma', 'Alami', '1', '2003-03-08', '', '', '', 'd'),
+('3', 'Guillem', 'Anglada', '1', '2005-06-08', '', '', '', 'h'),
+('4', 'Rodolfo', 'Kanovellas', '1234', '2004-06-08', '', 'img/1665925515-logo_hotel.png', '', ''),
+('47334063V', 'proba', 'proba', '81dc9bdb52d04dc20036dbd8313ed055', '1999-06-17', '', 'img/1666173842-Redouan.jpg', '', 'h'),
+('6', 'hulio', 'anguita', '1234', '2000-06-08', '', 'img/1665938604-logo_hotel.png', '', 'h'),
+('9', 'dos', 'tres', '1', '1998-06-08', '', 'img/1665593520-Redouan.jpg', '', '');
 
 -- --------------------------------------------------------
 
@@ -91,12 +93,12 @@ CREATE TABLE `cursos` (
 --
 
 INSERT INTO `cursos` (`idCurso`, `nom_curs`, `descripcio`, `horas`, `data_inici`, `data_final`, `dni_prof`, `actiu`) VALUES
-(30, 'JS', 'REGEX', 110, '2022-10-13', '2022-01-08', '47334063V', 1),
-(47, 'BBDD', 'DDL, DML, DCL', 120, '2022-10-16', '2022-05-30', '47334063V', 0),
-(56, 'Angles', 'A1', 150, '2022-10-13', '2022-08-30', '55534062F', 1),
-(62, 'PHP', 'MVC', 150, '2022-10-13', '2022-09-29', '55534062F', 0),
-(63, 'HTML-CSS', 'Decoracio', 150, '2022-10-16', '2022-10-21', '11111111H', 0),
-(64, 'XARXES', 'CABLEJAT', 150, '2022-10-16', '2022-11-16', '4444444Y', 0);
+(30, 'JS', 'REGEX', 110, '2022-10-17', '2022-01-08', '47334063V', 1),
+(47, 'BBDD', 'DDL, DML, DCL', 120, '2022-10-17', '2022-05-30', '47334063V', 1),
+(56, 'Angles', 'A1', 150, '2022-10-17', '2022-08-30', '55534062F', 1),
+(62, 'PHP', 'MVC', 150, '2022-10-17', '2022-09-29', '55534062F', 0),
+(63, 'HTML-CSS', 'Decoracio', 150, '2022-10-17', '2022-10-21', '47334063V', 1),
+(64, 'XARXES', 'CABLEJAT', 150, '2022-10-17', '2022-11-16', '4444444Y', 0);
 
 -- --------------------------------------------------------
 
@@ -116,18 +118,19 @@ CREATE TABLE `matricula` (
 --
 
 INSERT INTO `matricula` (`idCurso`, `dni_alum`, `nota`, `actiu`) VALUES
-(30, '1', '5', 0),
-(30, '2', '', 0),
-(30, '9', '', 0),
-(47, '1', '8', 1),
-(47, '2', '1', 0),
-(47, '3', '9', 0),
+(30, '1', '', 1),
+(30, '2', '', 1),
+(30, '9', '', 1),
+(47, '1', '', 0),
+(47, '2', '', 0),
+(47, '3', '', 0),
 (47, '4', '', 0),
 (47, '6', '', 0),
 (47, '9', '', 0),
-(56, '1', '3', 1),
+(56, '1', '', 1),
+(56, '123456789', '', 1),
 (56, '2', '', 1),
-(56, '9', '', 0),
+(56, '9', '', 1),
 (62, '1', '7', 0),
 (62, '2', '', 0);
 
@@ -155,12 +158,13 @@ CREATE TABLE `professors` (
 
 INSERT INTO `professors` (`dni_prof`, `nom_professor`, `cognom_professor`, `pass`, `titol_academic`, `fotografia`, `cursos_imparteixen`, `actiu`, `sexe`) VALUES
 ('11111111H', 'rtrt', 'trtr', 'prueba', 'Enyinyer TelecoS', 'img/1665905868-images.jpg', '', 1, ''),
-('2222222G', 'Oriol', 'Tarradelles', '1234', 'Enyinyer Informàtic', '', '', 1, ''),
-('3333333U', 'Montse', 'Rios', '1234', 'Enginyera Informàtic', '', '', 0, ''),
-('4444444Y', 'Malik', 'Benaisa', '1234', 'Enyinyer Informàtic', '', '', 1, ''),
-('47334063V', 'REDOUAN', 'NATI', '1234', 'Enginyeria informàtica', '', '', 0, ''),
+('2222222G', 'Oriol', 'Tarradelles', '1234', 'Enyinyer Informàtiq', 'img/1666022457-Redouan.jpg', '', 1, ''),
+('3333333U', 'Montse', 'Rios', '1234', 'Enginyera Informàtic', '', '', 1, ''),
+('4444444Y', 'Malik', 'Benaisa', '1234', 'Enyinyer Informàtic', 'img/1666017360-Redouan1.jpg', '', 1, ''),
+('47334063V', 'REDOUAN', 'NATI', '1234', 'Enginyeria informàtica', '', '', 1, ''),
 ('5151514P', 'Pol', 'Codina', '1234', 'Enyinyer Informàtic', '', '', 1, ''),
 ('55534062F', 'Olga', 'Domene', '1234', 'Enyinyer informàtic', '', '', 0, ''),
+('73547889F', 'admin', 'admin', '81dc9bdb52d04dc20036dbd8313ed055', 'Enyinyer Informàtic', 'img/1666177940-Redouan.jpg', '', 1, ''),
 ('8546251B', 'Albert', 'yu', '1234', 'Enyinyer TelecoS', 'img/1665940242-TESTIGOS.webp', '', 1, '');
 
 --

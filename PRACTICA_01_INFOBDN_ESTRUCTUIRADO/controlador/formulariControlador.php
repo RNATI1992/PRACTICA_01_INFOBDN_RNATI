@@ -20,11 +20,11 @@
                     header("Refresh:0; url=index.php?entrada=pagina_administracio");
                 } else {
                     include __DIR__ . '/../vista/administracio/vista_administracio.php';
-                    // header("Refresh:1; url=index.php?entrada=administracio");
+                    header("Refresh:1; url=index.php?entrada=administracio");
                 }
             } else {
                 include __DIR__ . '/../vista/administracio/vista_administracio.php';
-                // header("Refresh:1; url=index.php?entrada=administracio");
+                header("Refresh:1; url=index.php?entrada=administracio");
             }
         } else {
             include __DIR__ . '/../vista/administracio/vista_administracio.php';
@@ -39,36 +39,29 @@
         if(isset($_POST['entrada'])){
             $usuari = $_POST['form_usuari'];
             $password = $_POST['form_password'];
+            print_r($password);
             $incorrecte = "<div class='contenidor_2' style='background-color: #c94f60; color: #ffffff';>Has posat les credencials incorrectament! </div>";
             if(isset($_POST['radiologin'])){
                 if ($_POST['radiologin'] == "alumne"){
-                    $actiu = auth_actiu_alumne($usuari);
-                    if($actiu == '1'){
-                        $result = auth_login_alumne($usuari, $password);
-                        if ($result) {
-                            if (mysqli_fetch_array($result) != NULL) {
-                                $_SESSION['dni'] = $usuari;
-                                $_SESSION['pass'] = $password;
-                                include __DIR__ . '/../vista/alumnes/vista_alumnes_principal.php'; 
-                            } 
-                            else {
-                                echo $incorrecte;
-                                header("Refresh:1; url=index.php?entrada=checklogin");
-                            }
+                    $result = auth_login_alumne($usuari, $password);
+                    if ($result) {
+                        if (mysqli_fetch_array($result) != NULL) {
+                            $_SESSION['dni'] = $usuari;
+                            $_SESSION['pass'] = $password;
+                            include __DIR__ . '/../vista/alumnes/vista_alumnes_principal.php'; 
                         } 
                         else {
                             echo $incorrecte;
                             header("Refresh:1; url=index.php?entrada=checklogin");
                         }
-                    }
-                    else{
-                        usuari_desactivat();
-                        // header("Refresh:1; url=index.php?entrada=checklogin");
+                    } 
+                    else {
+                        echo $incorrecte;
+                        header("Refresh:1; url=index.php?entrada=checklogin");
                     }
                 }
                 else if($_POST['radiologin'] == "professor"){
                     $actiu = auth_actiu_professors($usuari);
-                    // print_r($actiu[1]);
                     if ($actiu == '1') {
                         $result = auth_login_professor($usuari, $password);
                         if ($result) {
@@ -89,7 +82,7 @@
                     }
                     else{
                         usuari_desactivat();
-                        // header("Refresh:1; url=index.php?entrada=checklogin");
+                        header("Refresh:1; url=index.php?entrada=checklogin");
                     }
                 } 
                 else {
@@ -115,31 +108,52 @@
         }
     }
 
+    function tractament_dni($dni){
+        $letter = substr($dni, -1);
+        $numbers = substr($dni, 0, -1);
+        $resultat = false;
+        if(strlen($dni) == 9){
+            if (substr("TRWAGMYFPDXBNJZSQVHLCKE", $numbers % 23, 1) == $letter && strlen($letter) == 1 && strlen($numbers) == 8) {
+                $resultat = true;
+            }
+        }
+        else{
+            $resultat = false;
+        }
+
+        return $resultat;
+    }
+
     function pagina_registre(){
         if(isset($_POST['registrar'])){
             $usuari= $_POST['dni_alum_form'];
             $foto_post[0] = $_FILES['foto']["tmp_name"];
             $foto_post[1] = $_FILES['foto']["name"];
-            // print_r($foto_post);
-            $result = comprovar_existeix_registre($usuari);
-            if ($result) {
-                if (mysqli_fetch_array($result) == NULL) {
-                    $afegir_foto = tractament_fitxer($foto_post);
-                    $registrar = registrar($afegir_foto);
-                    $_SESSION['dni'] = $_POST['dni_alum_form'];
-                    $_SESSION['pass'] = $_POST['registrar'];
-                    registre_succes();
-                    header("Refresh:1; url=index.php?entrada=pagina_principal_alumnes");
-                    // include __DIR__ . '/../vista/alumnes/vista_professors_principal.php';
+            $comprovacio_dni = tractament_dni($usuari);
+            if($comprovacio_dni){
+                $result = comprovar_existeix_registre($usuari);
+                if ($result) {
+                    if (mysqli_fetch_array($result) == NULL) {
+                        $afegir_foto = tractament_fitxer($foto_post);
+                        $registrar = registrar($afegir_foto);
+                        $_SESSION['dni'] = $_POST['dni_alum_form'];
+                        $_SESSION['pass'] = $_POST['registrar'];
+                        registre_succes();
+                        header("Refresh:1; url=index.php?entrada=pagina_principal_alumnes");
+                        // include __DIR__ . '/../vista/alumnes/vista_professors_principal.php';
+                    }
+                    else{
+                        registre_no_succes();
+                        header("Refresh:1; url=index.php?entrada=registre");
+                    }
                 }
                 else{
-                    registre_no_succes();
-                    header("Refresh:1; url=index.php?entrada=registre");
+                    header("Refresh:1; url=index.php?entrada=checklogin");
                 }
             }
             else{
-                
-                header("Refresh:1; url=index.php?entrada=checklogin");
+                dni_error();
+                header("Refresh:5; url=index.php?entrada=registre");
             }
         }
         else{
@@ -190,6 +204,10 @@
 
     function usuari_desactivat(){
         return print_r("<div class='contenidor_2' style='background-color: #c94f60; color: black';>Aquest usuari esta deactivat! </div>");
+    }
+
+    function dni_error(){
+        return print_r("<div class='contenidor_2' style='background-color: #c94f60; color: black';> <p>Has possat el DNI incorrectament </p><br><p style='color: #63FFA6'>Exemple: 73547889<span style='color: white'>F</span></p></div>");
     }
 
     function data_avui(){
@@ -346,7 +364,7 @@
                     $data_inici = $row['data_inici'];
                     $data_final = $row['data_final'];
                 }
-                $resultado_professors = professors_disponibles();
+                $resultado_professors = professors_disponibles_actius();
                 $professors = "";
 
                 foreach ($resultado_professors as $row) {
@@ -410,22 +428,29 @@
             if (isset($_POST['afegir'])) {
                 $professor = $_POST['dni_professors_afegir'];
                 $result = comprovar_existeix_professor($professor);
-                if ($result) {
-                    if (mysqli_fetch_array($result) == NULL) {
-                        $foto_post[0] = $_FILES['foto']["tmp_name"];
-                        $foto_post[1] = $_FILES['foto']["name"];
-                        $afegir_foto = tractament_fitxer($foto_post);
-                        $resultado_afegir_cursos = afegir_professors_administracio($afegir_foto);
-                        registre_succes();
-                        header("Refresh:1; url=index.php?entrada=pagina_principal_professors");
-                    } else {
+                $comprovacio_dni = tractament_dni($professor);
+                if ($comprovacio_dni) {
+                    if ($result) {
+                        if (mysqli_fetch_array($result) == NULL) {
+                            $foto_post[0] = $_FILES['foto']["tmp_name"];
+                            $foto_post[1] = $_FILES['foto']["name"];
+                            $afegir_foto = tractament_fitxer($foto_post);
+                            $resultado_afegir_cursos = afegir_professors_administracio($afegir_foto);
+                            registre_succes();
+                            header("Refresh:1; url=index.php?entrada=pagina_principal_professors");
+                        } else {
+                            registre_no_succes();
+                            header("Refresh:1; url=index.php?entrada=afegir_professors");
+                        }
+                    }
+                    else{
                         registre_no_succes();
                         header("Refresh:1; url=index.php?entrada=afegir_professors");
                     }
-                }
-                else{
-                    registre_no_succes();
-                    header("Refresh:1; url=index.php?entrada=afegir_professors");
+                } 
+                else {
+                    dni_error();
+                    header("Refresh:5; url=index.php?entrada=registre");
                 }
             } 
             else if(isset($_GET['retorno']) == "si"){
